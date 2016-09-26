@@ -3,6 +3,7 @@ from setuptools import setup
 
 PACKAGES = [
     'mda',
+    'mda.tests'
 ]
 
 def setup_package():
