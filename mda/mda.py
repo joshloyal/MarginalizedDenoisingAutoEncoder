@@ -155,10 +155,12 @@ class SMDAutoencoder(BaseEstimator, TransformerMixin):
         self.mdas = []
 
     def _forward(self, X):
+        hidden_layers = [X]
         h = X
         for mda in self.mdas:
             h = mda.transform(h)
-        return h
+            hidden_layers.append(h)
+        return np.hstack(hidden_layers)
 
     def fit(self, X, y=None):
         h = X

@@ -3,6 +3,9 @@ import os
 import numpy as np
 import pandas as pd
 import pytest
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_squared_error
+from sklearn.cross_validation import train_test_split
 
 import mda
 
@@ -35,4 +38,26 @@ def test_smda_matlab():
 
     mDA = mda.SMDAutoencoder(n_layers=4, noise_level=0.5)
     h = mDA.fit_transform(X)
-    print(h)
+
+
+def test_mda_pipeline():
+    df = pd.read_csv(data_path, header=None)
+    y = df.pop(8).values
+    X = df.values
+
+    #mDA = mda.MarginalizedDenoisingAutoencoder(noise_level=0.5)
+    mDA = mda.SMDAutoencoder(n_layers=4, noise_level=0.5)
+    X_mda = mDA.fit_transform(X)
+
+    print('MDA features')
+    X_train, X_test, y_train, y_test = train_test_split(X_mda, y, test_size=0.2, random_state=2)
+    est = RandomForestRegressor(n_estimators=100, random_state=123)
+    est.fit(X_train, y_train)
+    print(mean_squared_error(y_test, est.predict(X_test)))
+
+
+    print('No MDA')
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=2)
+    est = RandomForestRegressor(n_estimators=100, random_state=123)
+    est.fit(X_train, y_train)
+    print(mean_squared_error(y_test, est.predict(X_test)))
