@@ -2,7 +2,7 @@ import os
 
 import numpy as np
 import pandas as pd
-
+import pytest
 
 import mda
 
@@ -12,6 +12,7 @@ fixture_path = os.path.join(file_path, 'weights.npy')
 data_path = os.path.join(file_path, 'kin8nm_train.csv')
 
 
+@pytest.mark.thisone
 def test_mda_matlab():
     df = pd.read_csv(data_path, header=None)
     df.pop(8)
@@ -32,6 +33,6 @@ def test_smda_matlab():
     df.pop(8)
     X = df.values
 
-    mDA = mda.StackedMarginalizedDenoisingAutoencoder(n_layers=4, noise_level=0.5)
+    mDA = mda.SMDAutoencoder(n_layers=4, noise_level=0.5)
     h = mDA.fit_transform(X)
     print(h)

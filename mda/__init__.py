@@ -1,2 +1,2 @@
 from mda import MarginalizedDenoisingAutoencoder
-from mda import StackedMarginalizedDenoisingAutoencoder
+from mda import SMDAutoencoder
